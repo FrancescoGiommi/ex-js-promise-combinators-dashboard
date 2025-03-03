@@ -13,34 +13,40 @@ async function fetchJson(url) {
 }
 
 const getDashboardData = async (query) => {
-  const destination = fetchJson(
-    `https://boolean-spec-frontend.vercel.app/freetestapi/destinations?search=${query}`
-  );
+  try {
+    const destination = fetchJson(
+      `https://boolean-spec-frontend.vercel.app/freetestapi/destinations?search=${query}`
+    );
 
-  const weather = fetchJson(
-    `https://boolean-spec-frontend.vercel.app/freetestapi/weathers?search=${query}`
-  );
-  const airport = fetchJson(
-    `https://boolean-spec-frontend.vercel.app/freetestapi/airports?search=${query}`
-  );
+    const weather = fetchJson(
+      `https://boolean-spec-frontend.vercel.app/freetestapi/weathers?search=${query}`
+    );
+    const airport = fetchJson(
+      `https://boolean-spec-frontend.vercel.app/freetestapi/airports?search=${query}`
+    );
 
-  const promises = [destination, weather, airport];
-  const [destinations, weathers, airports] = await Promise.all(promises);
-  return {
-    city: destinations[0].name,
-    country: destinations[0].country,
-    temperature: weathers[0].temperature,
-    weather: weathers[0].weather_description,
-    airport: airports[0].name,
-  };
+    const promises = [destination, weather, airport];
+    const [destinations, weathers, airports] = await Promise.all(promises);
+    return {
+      city: destinations[0].name,
+      country: destinations[0].country,
+      temperature: null,
+      weather: null,
+      airport: airports[0].name,
+    };
+  } catch (error) {
+    throw new Error("Errore recupero data ", console.error(error));
+  }
 };
 
-getDashboardData("london")
+getDashboardData("vienna")
   .then((data) => {
     console.log("Dasboard data:", data);
     console.log(
       `${data.city} is in ${data.country}.\n` +
-        `Today there are ${data.temperature} degrees and the weather is ${data.weather}.\n` +
+        `Today there are ${
+          data.temperature
+        } degrees and the weather is ${null}.\n` +
         `The main airport is ${data.airport}.\n`
     );
   })
